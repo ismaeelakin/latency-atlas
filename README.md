@@ -4,6 +4,8 @@
 
 Rust · C11 · Python · No third-party runtime dependencies
 
+[![Numerical correctness](https://github.com/ismaeelakin/latency-atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/ismaeelakin/latency-atlas/actions/workflows/ci.yml)
+
 ```text
 LATENCY ATLAS
 8 samples · nanoseconds
@@ -39,6 +41,8 @@ PowerShell equivalent:
 ```
 
 Input is one unsigned decimal `u64` per line. ASCII whitespace and empty lines are accepted. Negative values, signs, fractions, NUL bytes, invalid UTF-8, values beyond `u64`, and lines longer than 64 bytes are rejected. The 64-byte limit includes line endings. Errors exit with code 2 and emit no partial report. Samples are processed one at a time; input is never loaded as a complete file.
+
+JSON fields are integer numbers. Consumers whose numeric type cannot represent the full u64 range (such as JavaScript's `Number`) need a lossless JSON parser for values above `2^53-1`.
 
 ## C implementation
 
