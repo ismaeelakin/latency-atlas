@@ -64,7 +64,7 @@ On Windows with GCC, use `New-Item -ItemType Directory -Force build`, add `.exe`
 
 ## Architecture
 
-![Architecture](docs/architecture.svg)
+![Architecture](docs/architecture-project.svg)
 
 ## Contract
 
