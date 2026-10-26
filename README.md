@@ -17,16 +17,15 @@ p99  64 .. 100 ns
 
 The example uses `0, 1, 2, 4, 8, 16, 32, 100`. These are deliberately coarse buckets. A result such as `[64,100]` is a range containing the exact order statistic, not an exact p99 of 100 or an estimate with 1% error.
 
-## Architecture
-
-![Architecture](docs/architecture.svg)
-
-
 ## Why this project exists
 
 Collecting every request duration is simple until memory grows with traffic. Latency Atlas keeps **65 counters plus count/min/max**, independent of input size. It makes the precision tradeoff explicit, rejects counter overflow without partial mutation, and checks two implementations against exact ranks rather than merely comparing them to each other.
 
 This is an educational systems tool for integer nanosecond samples. It does not instrument an application, correct coordinated omission, aggregate rolling windows, or offer HDRHistogram-level precision. No production adoption or performance superiority is claimed.
+
+## Tech stack
+
+Rust, C11 and Python. The two CLI implementations have no third-party runtime dependencies.
 
 ## Build and use
 
@@ -62,6 +61,10 @@ python tests/conformance.py --rust target/release/latency-atlas --c build/latenc
 ```
 
 On Windows with GCC, use `New-Item -ItemType Directory -Force build`, add `.exe` to output paths, and use `./build/test_histogram.exe`. The C CLI currently emits JSON only. The library also supports weighted observations and histogram merges, which are tested directly.
+
+## Architecture
+
+![Architecture](docs/architecture.svg)
 
 ## Contract
 
