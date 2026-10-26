@@ -1,6 +1,6 @@
 # Latency Atlas
 
-**Know the bounds of your tail latency.** Streaming, mergeable base-2 histograms in Rust and C, with an independent Python conformance harness.
+Streaming, mergeable base-2 histograms in Rust and C, with an independent Python conformance harness.
 
 Rust · C11 · Python · No third-party runtime dependencies
 
@@ -16,6 +16,11 @@ p99  64 .. 100 ns
 ```
 
 The example uses `0, 1, 2, 4, 8, 16, 32, 100`. These are deliberately coarse buckets. A result such as `[64,100]` is a range containing the exact order statistic, not an exact p99 of 100 or an estimate with 1% error.
+
+## Architecture
+
+![Architecture](docs/architecture.svg)
+
 
 ## Why this project exists
 
@@ -83,6 +88,6 @@ Rust uses `u128` for rank arithmetic. C splits the multiplication into quotient 
 
 [Numerical design and tradeoffs](docs/DESIGN.md) · [Reproducible benchmarking](docs/BENCHMARKS.md) · [Contributing](CONTRIBUTING.md)
 
-## Provenance
+## Project status
 
-Created for Ismaeel Habeeb's public engineering portfolio with AI-assisted implementation and documentation. This is a new reference project, not evidence of years of production operation. Its value is in the contract, inspectable algorithms, and reproducible checks.
+This is a reference implementation for studying histogram contracts and numerical testing. It is not a production telemetry service.
