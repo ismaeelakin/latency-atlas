@@ -1,0 +1,24 @@
+name: numerical correctness
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: rustup component add rustfmt clippy
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test
+      - run: cargo build --release
+      - run: mkdir -p build
+      - run: cc -std=c11 -Wall -Wextra -Werror -pedantic -O2 c/histogram.c c/test_histogram.c -o build/test_histogram
+      - run: ./build/test_histogram
+      - run: cc -std=c11 -Wall -Wextra -Werror -pedantic -fsanitize=address,undefined -g c/histogram.c c/test_histogram.c -o build/test_sanitized
+      - run: ./build/test_sanitized
+      - run: cc -std=c11 -Wall -Wextra -Werror -pedantic -O2 c/histogram.c c/main.c -o build/latency-atlas-c
+      - run: python tests/conformance.py --rust target/release/latency-atlas --c build/latency-atlas-c
