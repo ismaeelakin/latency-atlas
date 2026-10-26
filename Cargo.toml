@@ -1,0 +1,18 @@
+[package]
+name = "latency-atlas"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded-memory latency histograms with Rust/C conformance tests"
+license = "MIT"
+repository = "https://github.com/ismaeelakin/latency-atlas"
+
+[lib]
+name = "latency_atlas"
+path = "src/lib.rs"
+
+[[bin]]
+name = "latency-atlas"
+path = "src/main.rs"
+
+[profile.release]
+overflow-checks = true
