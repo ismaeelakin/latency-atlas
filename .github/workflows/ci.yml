@@ -21,4 +21,12 @@ jobs:
       - run: cc -std=c11 -Wall -Wextra -Werror -pedantic -fsanitize=address,undefined -g c/histogram.c c/test_histogram.c -o build/test_sanitized
       - run: ./build/test_sanitized
       - run: cc -std=c11 -Wall -Wextra -Werror -pedantic -O2 c/histogram.c c/main.c -o build/latency-atlas-c
-      - run: python tests/conformance.py --rust target/release/latency-atlas --c build/latency-atlas-c
+      - run: |
+          cc -std=c11 -Wall -Wextra -Werror -pedantic -O2 -Ic \
+            c/histogram.c c/ffi_conformance.c -Ltarget/release -llatency_atlas \
+            -Wl,-rpath,'$ORIGIN/../target/release' -o build/ffi_conformance
+      - run: |
+          python tests/conformance.py \
+            --rust target/release/latency-atlas \
+            --c build/latency-atlas-c \
+            --rust-ffi build/ffi_conformance

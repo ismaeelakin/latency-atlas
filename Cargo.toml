@@ -9,6 +9,7 @@ repository = "https://github.com/ismaeelakin/latency-atlas"
 [lib]
 name = "latency_atlas"
 path = "src/lib.rs"
+crate-type = ["rlib", "cdylib"]
 
 [[bin]]
 name = "latency-atlas"

@@ -16,11 +16,13 @@ Basis points are integer values 0–10000. For a nonempty histogram, p0 returns 
 
 The sum of all buckets always equals count; min/max summarize all observations when count is nonzero. Checked total-count addition happens before record or merge mutates any field. Since each nonnegative bucket is at most the total, this total check also proves each bucket addition safe. A zero-weight record leaves even min/max untouched.
 
-Rust fields are private. C exposes its struct for predictable ownership and interop, so valid initialization and no direct field mutation are preconditions. This project avoids unsafe Rust and cross-language FFI: the independent implementations share a behavioral contract and CLI schema, not process memory.
+Rust fields stay private. The native C implementation exposes its own struct, so callers must initialize it and leave its fields untouched. The Rust C API uses an opaque handle instead: creation and destruction stay on the Rust side, and C never depends on Rust's memory layout. Raw-pointer access is confined to the FFI module. A caller must pass a live handle made by that API; all functions except destroy reject null pointers, and arbitrary or dangling pointers cannot be validated. An unexpected Rust panic at a C ABI boundary aborts the process rather than unwinding into C.
+
+The histogram logic remains safe Rust. The new C boundary contains the small unsafe layer needed to read handles and write C outputs; its caller owns the obligation to keep handles valid and synchronize shared access.
 
 ## Merge properties and limitations
 
-Compatible histogram merge is associative and commutative when total counts fit. Partitioning a stream and merging its histograms must produce the same counts, extrema, and quantile bounds as a single pass. Rust needs a clone to self-merge; C explicitly supports aliasing the source and destination.
+Compatible histogram merge is associative and commutative when total counts fit. Partitioning a stream and merging its histograms must produce the same counts, extrema, and quantile bounds as a single pass. The Rust C API supports self-merge by copying the source before mutation, matching the native C library's behavior.
 
 There is no subtraction API: removing old windows requires retaining a ring of separate window histograms, and deciding when a window closes is a separate distributed-systems problem. Persisted binary formats, timestamp units other than nanoseconds, invalid-structure recovery, concurrent mutation, and high-resolution sub-buckets are outside v0.1.
 
