@@ -19,7 +19,7 @@ printf '0\n1\n2\n4\n8\n16\n32\n100\n' | build/ffi_conformance
 
 The C program calls the Rust library and the native C implementation with the same input. It prints the Rust results only after both implementations agree. The Python conformance harness checks those results against exact sorted ranks.
 
-On Windows, use MSYS2 GCC with the `x86_64-pc-windows-gnu` Rust target. Link against the import library in `target/release`, then add that directory to `PATH` before running the C executable so Windows can find the Rust DLL.
+On Windows, use MSYS2 GCC with the `x86_64-pc-windows-gnu` Rust target. From an MSVC-hosted Rust installation, add the target with `rustup target add x86_64-pc-windows-gnu`, then run `cargo build --release --target x86_64-pc-windows-gnu`. Cargo places the import library and DLL in `target/x86_64-pc-windows-gnu/release`; use that directory for GCC's `-L` option and add it to `PATH` before running the C executable. If GNU is the active host toolchain and you omit `--target`, Cargo keeps the output in `target/release`.
 
 ## Ownership and errors
 
