@@ -62,6 +62,12 @@ python tests/conformance.py --rust target/release/latency-atlas --c build/latenc
 
 On Windows with GCC, use `New-Item -ItemType Directory -Force build`, add `.exe` to output paths, and use `./build/test_histogram.exe`. The C CLI currently emits JSON only. The library also supports weighted observations and histogram merges, which are tested directly.
 
+## Rust C API
+
+The Rust histogram is also callable from C through an opaque-handle API. The header keeps Rust's memory layout private, and its symbols use a separate prefix so a program can link both implementations at once.
+
+See [the Rust C API notes](docs/C_API.md) for ownership, status codes, and a linking example. CI builds a C caller and checks its results against the native C implementation and the Python exact-rank oracle.
+
 ## Architecture
 
 ![Architecture](docs/architecture-project.svg)
@@ -86,10 +92,10 @@ Rust uses `u128` for rank arithmetic. C splits the multiplication into quotient 
 
 - Rust tests exercise every power-of-two boundary, exact-rank containment over 10,000 deterministic observations, partition/merge equivalence, zero weight, endpoint handling, and atomic overflow.
 - C tests cover matching boundary and overflow invariants, partition merging, and self-merge.
-- The black-box harness feeds 38 distributions into both CLIs, checks JSON equality, and independently verifies that exact sorted percentiles fall within returned bounds. It also checks malformed inputs and CRLF.
-- CI runs formatting, Clippy with warnings denied, Rust tests, strict C warnings, AddressSanitizer/UndefinedBehaviorSanitizer on the C tests, and cross-language checks.
+- The black-box harness feeds 38 distributions into both CLIs and a C caller of the Rust library. It checks JSON equality and independently verifies that exact sorted percentiles fall within returned bounds. It also checks malformed inputs and CRLF.
+- CI runs formatting, Clippy with warnings denied, Rust tests, strict C warnings, AddressSanitizer/UndefinedBehaviorSanitizer on the native C tests, and CLI/FFI cross-language checks.
 
-[Numerical design and tradeoffs](docs/DESIGN.md) · [Reproducible benchmarking](docs/BENCHMARKS.md) · [Contributing](CONTRIBUTING.md)
+[Numerical design and tradeoffs](docs/DESIGN.md) · [Rust C API](docs/C_API.md) · [Reproducible benchmarking](docs/BENCHMARKS.md) · [Contributing](CONTRIBUTING.md)
 
 ## Project status
 

@@ -1,6 +1,8 @@
 //! A mergeable base-2 histogram for nonnegative u64 observations.
 //! Quantiles return bucket bounds, never a fictitious exact percentile.
 
+mod ffi;
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Histogram {
     buckets: [u64; 65],
