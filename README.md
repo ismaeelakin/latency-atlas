@@ -70,7 +70,7 @@ See [the Rust C API notes](docs/C_API.md) for ownership, status codes, and a lin
 
 ## Architecture
 
-![Architecture](docs/architecture-project.svg)
+![Rust and C histogram paths, the Rust C API, and the Python oracle](docs/architecture-project.svg)
 
 ## Contract
 
